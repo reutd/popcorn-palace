@@ -63,7 +63,7 @@ services:
         protocol: tcp
 ```
 
-Run the file using the following command:
+Run the Docker Compose file using the following command:
 
 ```bash
 docker-compose up -d
@@ -128,6 +128,24 @@ Then run:
 mvn spring-boot:run
 ```
 
+## Switching Between PostgreSQL and H2 (Using Spring Profiles)
+
+To avoid changing the main `application.yml` repeatedly, you can use [Spring Profiles](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.profiles).
+
+Create profile-specific config files like:
+
+- `application-postgres.yml`
+- `application-h2.yml`
+
+Then run with:
+
+```bash
+# For PostgreSQL
+mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+
+# For H2 (dev/test)
+mvn spring-boot:run -Dspring-boot.run.profiles=h2
+```
 ---
 
 ## Running the Tests
@@ -194,6 +212,4 @@ Tests are provided and can be run using Maven. Each test runs in its own transac
 ### API Behavior
 
 Movies, showtimes, and theaters cannot be deleted if they are associated with active relationships.
-
-
 
