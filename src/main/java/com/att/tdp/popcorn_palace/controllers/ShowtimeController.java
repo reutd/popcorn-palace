@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.Data;
 import jakarta.validation.Valid;
@@ -50,7 +51,7 @@ public class ShowtimeController {
     }
 
     @PostMapping("/update/{showtimeId}")
-    public Showtime updateShowtime(@PathVariable Long showtimeId, @Valid @RequestBody ShowtimeRequest request) {
+    public ResponseEntity<Void> updateShowtime(@PathVariable Long showtimeId, @Valid @RequestBody ShowtimeRequest request) {
         // Normalize and validate theater name.
         String normalizedTheater = InputUtils.normalizeString(request.getTheater());
         if (normalizedTheater == null || normalizedTheater.isEmpty()) {
@@ -64,7 +65,10 @@ public class ShowtimeController {
         showtime.setEndTime(request.getEndTime());
 
         // Update the showtime in the database.
-        return showtimeService.updateShowtime(showtimeId, showtime, request.getMovieId(), normalizedTheater);
+        showtimeService.updateShowtime(showtimeId, showtime, request.getMovieId(), normalizedTheater);
+
+        // Return 200 OK with no body.
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{showtimeId}")

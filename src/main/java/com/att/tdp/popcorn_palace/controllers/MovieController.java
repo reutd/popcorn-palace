@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class MovieController {
     }
 
     @PostMapping("/update/{movieTitle}")
-    public Movie updateMovie(@PathVariable String movieTitle, @Valid @RequestBody MovieRequest request) {
+    public ResponseEntity<Void> updateMovie(@PathVariable String movieTitle, @Valid @RequestBody MovieRequest request) {
         // Normalize the input title and the updated title.
         String normalizedMovieTitle = InputUtils.normalizeString(movieTitle);
         String normalizedNewTitle = InputUtils.normalizeString(request.getTitle());
@@ -64,7 +65,10 @@ public class MovieController {
         movie.setReleaseYear(request.getReleaseYear());
 
         // Save to the database.
-        return movieService.updateMovie(normalizedMovieTitle, movie);
+        movieService.updateMovie(normalizedMovieTitle, movie);
+
+        // Return 200 OK with no body.
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{movieTitle}")
